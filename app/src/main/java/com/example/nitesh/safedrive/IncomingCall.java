@@ -18,6 +18,9 @@ public class IncomingCall extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         try {
+            AudioManager am;
+            am = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+            int previousState = am.getRingerMode();
             String state = intent.getStringExtra(TelephonyManager.EXTRA_STATE);
             Toast.makeText(context,state,Toast.LENGTH_LONG).show();
             String incomingNumber = intent.getStringExtra(TelephonyManager.EXTRA_INCOMING_NUMBER);
@@ -25,8 +28,7 @@ public class IncomingCall extends BroadcastReceiver {
                 Toast.makeText(context, "Ringing State Number is - " + incomingNumber, Toast.LENGTH_SHORT).show();
               if(getFromSP(context,HomeActivity.AUTO_CALL))
                 if(getFromSP(context,HomeActivity.DRIVE_MODE)) {
-                    AudioManager am;
-                    am = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+
 //For Silent mode
                     am.setRingerMode(AudioManager.RINGER_MODE_SILENT);
 
@@ -43,15 +45,11 @@ public class IncomingCall extends BroadcastReceiver {
             else if(state.equals(TelephonyManager.EXTRA_STATE_OFFHOOK))
             {
                 Toast.makeText(context, "OffHook State Number is - " + incomingNumber, Toast.LENGTH_SHORT).show();
-                AudioManager am;
-                am= (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
-                am.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
+                am.setRingerMode(previousState);
             }
             else if(state.equals(TelephonyManager.EXTRA_STATE_IDLE)){
                 Toast.makeText(context, "Idle State Number is - " + incomingNumber, Toast.LENGTH_SHORT).show();
-                AudioManager am;
-                am= (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
-                am.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
+                am.setRingerMode(previousState);
 
             }
         } catch (Exception e) {

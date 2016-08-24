@@ -37,12 +37,12 @@ public class IncomingSms extends BroadcastReceiver {
 
                     String senderNum = phoneNumber;
                     String message = currentMessage.getDisplayMessageBody();
-                    final TextToSpeech t1 = new TextToSpeech(context, new TextToSpeech.OnInitListener() {
+                    /*TextToSpeech t1 = new TextToSpeech(context, new TextToSpeech.OnInitListener() {
                        @Override
                         public void onInit(int status) {
                             if(status != TextToSpeech.ERROR) {
                                 try {
-                                    t1.setLanguage(Locale.UK);
+                                    this.setLanguage(Locale.UK);
                                 }
                                 catch (Exception e)
                                 {
@@ -51,7 +51,7 @@ public class IncomingSms extends BroadcastReceiver {
                             }
                         }
                     });
-                    t1.speak(message, TextToSpeech.QUEUE_FLUSH, null);
+                    t1.speak(message, TextToSpeech.QUEUE_FLUSH, null);*/
                     Log.i("SmsReceiver", "senderNum: "+ senderNum + "; message: " + message);
                     int duration = Toast.LENGTH_LONG;
                     Toast toast = Toast.makeText(context,
