@@ -56,47 +56,47 @@ public class HomeActivity extends AppCompatActivity
     }
     public void autoSms(View view)
     {
-        CheckBox driveToggleButton = (CheckBox) view;
-        saveInSp(AUTO_SMS,driveToggleButton.isChecked());
-        if(driveToggleButton.isChecked())
+        CheckBox smsToggleButton = (CheckBox) view;
+        saveInSp(AUTO_SMS,smsToggleButton.isChecked());
+        if(smsToggleButton.isChecked())
         {
-            driveToggleButton.setText("Auto Send Sms:On");
-            driveToggleButton.setBackgroundColor(getResources().getColor(android.R.color.holo_green_light));
+            smsToggleButton.setText("Auto Send Sms:On");
+            smsToggleButton.setBackgroundColor(getResources().getColor(android.R.color.holo_green_light));
         }
         else
         {
-            driveToggleButton.setText("Auto Send Sms:Off");
-            driveToggleButton.setBackgroundColor(getResources().getColor(android.R.color.holo_red_light));
+            smsToggleButton.setText("Auto Send Sms:Off");
+            smsToggleButton.setBackgroundColor(getResources().getColor(android.R.color.holo_red_light));
         }
     }
     public void autoCall(View view)
     {
-        CheckBox driveToggleButton = (CheckBox) view;
-        saveInSp(AUTO_CALL,driveToggleButton.isChecked());
-        if(driveToggleButton.isChecked())
+        CheckBox callToggleButton = (CheckBox) view;
+        saveInSp(AUTO_CALL,callToggleButton.isChecked());
+        if(callToggleButton.isChecked())
         {
-            driveToggleButton.setText("Auto Silent Call:On");
-            driveToggleButton.setBackgroundColor(getResources().getColor(android.R.color.holo_green_light));
+            callToggleButton.setText("Auto Silent Call:On");
+            callToggleButton.setBackgroundColor(getResources().getColor(android.R.color.holo_green_light));
         }
         else
         {
-            driveToggleButton.setText("Auto Silent Call:Off");
-            driveToggleButton.setBackgroundColor(getResources().getColor(android.R.color.holo_red_light));
+            callToggleButton.setText("Auto Silent Call:Off");
+            callToggleButton.setBackgroundColor(getResources().getColor(android.R.color.holo_red_light));
         }
     }
     public void callLog(View view)
     {
-        CheckBox driveToggleButton = (CheckBox) view;
-        saveInSp(CALL_LOG,driveToggleButton.isChecked());
-        if(driveToggleButton.isChecked())
+        CheckBox callLogToggleButton = (CheckBox) view;
+        saveInSp(CALL_LOG,callLogToggleButton.isChecked());
+        if(callLogToggleButton.isChecked())
         {
-            driveToggleButton.setText("Save Missed Call/SMS:On");
-            driveToggleButton.setBackgroundColor(getResources().getColor(android.R.color.holo_green_light));
+            callLogToggleButton.setText("Save Missed Call/SMS:On");
+            callLogToggleButton.setBackgroundColor(getResources().getColor(android.R.color.holo_green_light));
         }
         else
         {
-            driveToggleButton.setText("Save Missed Call/SMS:Off");
-            driveToggleButton.setBackgroundColor(getResources().getColor(android.R.color.holo_red_light));
+            callLogToggleButton.setText("Save Missed Call/SMS:Off");
+            callLogToggleButton.setBackgroundColor(getResources().getColor(android.R.color.holo_red_light));
         }
     }
     public void driveToggle(View view)
@@ -115,6 +115,13 @@ public class HomeActivity extends AppCompatActivity
             driveToggleButton.setText("Drive Mode:Off");
             driveToggleButton.setBackgroundColor(getResources().getColor(android.R.color.holo_red_light));
             relativeLayout.setBackgroundColor(getResources().getColor(android.R.color.holo_red_dark));
+            CheckBox cb2,cb3,cb4;
+            cb2 = (CheckBox)findViewById(R.id.autoCall);
+            cb3 = (CheckBox)findViewById(R.id.autoSms);
+            cb4 = (CheckBox)findViewById(R.id.saveLog);
+            cb2.setActivated(false);
+            cb3.setActivated(false);
+            cb4.setActivated(false);
         }
     }
     private boolean getFromSP(String key){

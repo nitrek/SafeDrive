@@ -22,30 +22,27 @@
         android:text="Auto Send Sms"
         android:id="@+id/autoSms"
         android:onClick="autoSms"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-        android:layout_marginRight="@dimen/activity_horizontal_margin"
-        android:layout_alignParentTop="true"
-        android:layout_alignStart="@+id/saveLog" />
+        android:gravity="center_vertical"
+        android:layout_marginLeft="100dp"
+        />
     <CheckBox
         android:layout_width="100dp"
         android:layout_height="50dp"
         android:text="Auto Silent Call"
         android:id="@+id/autoCall"
         android:onClick="autoCall"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-        android:layout_marginRight="@dimen/activity_horizontal_margin"
         android:layout_below="@+id/autoSms"
-        android:layout_alignStart="@+id/saveLog" />
+        android:layout_alignStart="@+id/autoSms"
+        />
     <CheckBox
         android:layout_width="100dp"
         android:layout_height="50dp"
         android:text="Save Missed Call/Sms Log"
         android:id="@+id/saveLog"
         android:onClick="callLog"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-        android:layout_marginRight="@dimen/activity_horizontal_margin"
         android:layout_below="@+id/autoCall"
-        android:layout_alignStart="@+id/driveModeToggle" />
+        android:layout_alignStart="@+id/autoSms"
+        />
 
     <CheckBox
         android:layout_width="match_parent"
@@ -53,9 +50,11 @@
         android:text="Drive Mode Off"
         android:textAlignment="center"
         android:id="@+id/driveModeToggle"
-        android:layout_margin="@dimen/activity_horizontal_margin"
         android:background="@android:color/holo_red_light"
         android:onClick="driveToggle"
-        android:layout_below="@+id/saveLog"
-        />
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:layout_marginBottom="92dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
 </RelativeLayout>

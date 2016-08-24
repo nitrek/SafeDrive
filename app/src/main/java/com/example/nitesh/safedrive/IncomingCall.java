@@ -23,21 +23,23 @@ public class IncomingCall extends BroadcastReceiver {
             String incomingNumber = intent.getStringExtra(TelephonyManager.EXTRA_INCOMING_NUMBER);
             if (state.equals(TelephonyManager.EXTRA_STATE_RINGING)) {
                 Toast.makeText(context, "Ringing State Number is - " + incomingNumber, Toast.LENGTH_SHORT).show();
-              if(getFromSP(context,HomeActivity.DRIVE_MODE))
-                AudioManager am;
-                am= (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+              if(getFromSP(context,HomeActivity.AUTO_CALL))
+                if(getFromSP(context,HomeActivity.DRIVE_MODE)) {
+                    AudioManager am;
+                    am = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
 //For Silent mode
-                am.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+                    am.setRingerMode(AudioManager.RINGER_MODE_SILENT);
 
 //For Vibrate mode
-                am.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
-
-                PendingIntent pi = PendingIntent.getActivity(context,0,intent,0);
-                SmsManager smsManager = SmsManager.getDefault();
-                smsManager.sendTextMessage(incomingNumber,null,"msg",pi,null);
-                Toast.makeText(context, "Sms sent Number is - " + incomingNumber, Toast.LENGTH_SHORT).show();
-
-            }
+                    am.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
+                }
+                if (getFromSP(context,HomeActivity.AUTO_SMS)) {
+                    PendingIntent pi = PendingIntent.getActivity(context, 0, intent, 0);
+                    SmsManager smsManager = SmsManager.getDefault();
+                    smsManager.sendTextMessage(incomingNumber, null, "I am Driving! Please Call me Later.", pi, null);
+                    Toast.makeText(context, "Sms sent Number is - " + incomingNumber, Toast.LENGTH_SHORT).show();
+                }
+              }
             else if(state.equals(TelephonyManager.EXTRA_STATE_OFFHOOK))
             {
                 Toast.makeText(context, "OffHook State Number is - " + incomingNumber, Toast.LENGTH_SHORT).show();
