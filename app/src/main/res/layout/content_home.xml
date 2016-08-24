@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.example.nitesh.safedrive.HomeActivity"
+    tools:showIn="@layout/app_bar_home"
+    android:gravity="center_horizontal"
+    android:id="@+id/contentLayout"
+    >
+
+
+    <CheckBox
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:text="Auto Send Sms"
+        android:id="@+id/autoSms"
+        android:onClick="autoSms"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:layout_alignParentTop="true"
+        android:layout_alignStart="@+id/saveLog" />
+    <CheckBox
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:text="Auto Silent Call"
+        android:id="@+id/autoCall"
+        android:onClick="autoCall"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:layout_below="@+id/autoSms"
+        android:layout_alignStart="@+id/saveLog" />
+    <CheckBox
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:text="Save Missed Call/Sms Log"
+        android:id="@+id/saveLog"
+        android:onClick="callLog"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:layout_below="@+id/autoCall"
+        android:layout_alignStart="@+id/driveModeToggle" />
+
+    <CheckBox
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:text="Drive Mode Off"
+        android:textAlignment="center"
+        android:id="@+id/driveModeToggle"
+        android:layout_margin="@dimen/activity_horizontal_margin"
+        android:background="@android:color/holo_red_light"
+        android:onClick="driveToggle"
+        android:layout_below="@+id/saveLog"
+        />
+</RelativeLayout>
