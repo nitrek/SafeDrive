@@ -1,7 +1,13 @@
 package com.example.nitesh.safedrive;
 
 import android.Manifest;
+import android.content.Intent;
+
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -22,6 +28,7 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
@@ -34,11 +41,15 @@ public class HomeActivity extends AppCompatActivity
     public static final String CALL_LOG = "calllog";
     public static final String AUTO_CALL = "autocall";
     String TAG ="HomeActivity";
+    Intent intent;
+    Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        this.context = HomeActivity.this;
+        intent = getIntent();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -208,7 +219,11 @@ public class HomeActivity extends AppCompatActivity
             driveToggleButton.setText("Drive Mode:On");
             driveToggleButton.setBackgroundColor(getResources().getColor(android.R.color.holo_green_light));
             relativeLayout.setBackgroundColor(getResources().getColor(android.R.color.holo_green_dark));
-        } else {
+            showNotification();
+        }
+        else
+        {
+            cancelNotification(0);
             driveToggleButton.setText("Drive Mode:Off");
             driveToggleButton.setBackgroundColor(getResources().getColor(android.R.color.holo_red_light));
             relativeLayout.setBackgroundColor(getResources().getColor(android.R.color.holo_red_dark));
@@ -297,6 +312,37 @@ public class HomeActivity extends AppCompatActivity
     public void onStop() {
         super.onStop();
 
+    }
+    public void showNotification(){
 
+        Toast.makeText(context, "hey showNotification called", Toast.LENGTH_LONG).show();
+        PendingIntent pIntent = PendingIntent.getActivity(context, 0, intent, 0);
+
+
+        Notification mNotification = new Notification.Builder(context)
+
+                .setContentTitle("DriveSafe!")
+                .setContentText("Safe mode is on!")
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentIntent(pIntent)
+
+                .addAction(R.mipmap.ic_launcher, "Dismiss", pIntent)
+                .addAction(0, "View", pIntent)
+
+                .build();
+
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+
+
+        notificationManager.notify(0, mNotification);
+    }
+
+    public void cancelNotification(int notificationId){
+
+        if (Context.NOTIFICATION_SERVICE!=null) {
+            String ns = Context.NOTIFICATION_SERVICE;
+            NotificationManager nMgr = (NotificationManager) context.getApplicationContext().getSystemService(ns);
+            nMgr.cancel(notificationId);
+        }
     }
 }
