@@ -22,7 +22,7 @@ public class IncomingSms extends BroadcastReceiver {
 
     public void onReceive(Context context, Intent intent) {
 
-      final Bundle bundle = intent.getExtras();
+        final Bundle bundle = intent.getExtras();
 
         try {
 
@@ -52,17 +52,17 @@ public class IncomingSms extends BroadcastReceiver {
                         }
                     });
                     t1.speak(message, TextToSpeech.QUEUE_FLUSH, null);*/
-                    Log.i("SmsReceiver", "senderNum: "+ senderNum + "; message: " + message);
+                    Log.i(" SmsReceiver ", " senderNum: " + senderNum + "; message: " + message);
                     int duration = Toast.LENGTH_LONG;
                     Toast toast = Toast.makeText(context,
-                            "senderNum: "+ senderNum + ", message: " + message, duration);
+                            " senderNum: " + senderNum + ", message: " + message, duration);
                     toast.show();
 
                 }
             }
 
         } catch (Exception e) {
-            Log.e("SmsReceiver", "Exception smsReceiver" +e);
+            Log.e("SmsReceiver", "Exception smsReceiver" + e);
 
         }
     }

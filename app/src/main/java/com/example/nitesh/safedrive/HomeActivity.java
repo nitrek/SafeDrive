@@ -40,7 +40,7 @@ public class HomeActivity extends AppCompatActivity
     public static final String AUTO_SMS = "autosms";
     public static final String CALL_LOG = "calllog";
     public static final String AUTO_CALL = "autocall";
-    String TAG ="HomeActivity";
+    String TAG = "HomeActivity";
     Intent intent;
     Context context;
 
@@ -61,23 +61,33 @@ public class HomeActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        restoreCheckBoxState();
+    }
+
+    public void restoreCheckBoxState() {
+
         CheckBox cb1, cb2, cb3, cb4;
 
         cb1 = (CheckBox) findViewById(R.id.driveModeToggle);
         cb1.setChecked(getFromSP(DRIVE_MODE));
         driveToggle(cb1);
+
         cb2 = (CheckBox) findViewById(R.id.autoCall);
         cb2.setChecked(getFromSP(AUTO_CALL));
         autoCall(cb2);
+
         cb3 = (CheckBox) findViewById(R.id.autoSms);
         cb3.setChecked(getFromSP(AUTO_SMS));
         autoSms(cb3);
+
         cb4 = (CheckBox) findViewById(R.id.saveLog);
         cb4.setChecked(getFromSP(CALL_LOG));
         callLog(cb4);
+
         checkCallPermissions();
         checkSmsPermissions();
-        }
+    }
+
     public void checkCallPermissions() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -87,24 +97,8 @@ public class HomeActivity extends AppCompatActivity
             Log.i(TAG,
                     "CALL permission has already been granted.");
         }
-
-       /* if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_SMS)
-                != PackageManager.PERMISSION_GRANTED) {
-
-            requestReadSmsPermission();
-        } else {
-            Log.i(TAG,
-                    "Sms permission has already been granted.");
-        }
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.RECEIVE_SMS)
-                != PackageManager.PERMISSION_GRANTED) {
-
-            requestReciveSmsPermission();
-        } else {
-            Log.i(TAG,
-                    "Sms permission has already been granted.");
-        }*/
     }
+
     public void checkSmsPermissions() {
        /* if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_SMS)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -131,6 +125,7 @@ public class HomeActivity extends AppCompatActivity
                     "Sms permission has already been granted.");
         }
     }
+
     private void requestCallPermission() {
         Log.i(TAG, "Call permission has NOT been granted. Requesting permission.");
 
@@ -138,11 +133,11 @@ public class HomeActivity extends AppCompatActivity
                 Manifest.permission.READ_PHONE_STATE)) {
 
         } else {
-     ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE},
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE},
                     0);
         }
     }
-
+/*
     private void requestReadSmsPermission() {
         Log.i(TAG, "Read sms permission has NOT been granted. Requesting permission.");
 
@@ -153,6 +148,7 @@ public class HomeActivity extends AppCompatActivity
                     1);
         }
     }
+
     private void requestReciveSmsPermission() {
         Log.i(TAG, "Receive permission has NOT been granted. Requesting permission.");
 
@@ -163,7 +159,8 @@ public class HomeActivity extends AppCompatActivity
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECEIVE_SMS},
                     2);
         }
-    }
+    }*/
+
     private void requestSendSmsPermission() {
         Log.i(TAG, "Send Sms permission has NOT been granted. Requesting permission.");
 
@@ -175,6 +172,7 @@ public class HomeActivity extends AppCompatActivity
                     3);
         }
     }
+
     public void autoSms(View view) {
         CheckBox smsToggleButton = (CheckBox) view;
         saveInSp(AUTO_SMS, smsToggleButton.isChecked());
@@ -220,9 +218,7 @@ public class HomeActivity extends AppCompatActivity
             driveToggleButton.setBackgroundColor(getResources().getColor(android.R.color.holo_green_light));
             relativeLayout.setBackgroundColor(getResources().getColor(android.R.color.holo_green_dark));
             showNotification();
-        }
-        else
-        {
+        } else {
             cancelNotification(0);
             driveToggleButton.setText("Drive Mode:Off");
             driveToggleButton.setBackgroundColor(getResources().getColor(android.R.color.holo_red_light));
@@ -313,11 +309,10 @@ public class HomeActivity extends AppCompatActivity
         super.onStop();
 
     }
-    public void showNotification(){
 
-        Toast.makeText(context, "hey showNotification called", Toast.LENGTH_LONG).show();
-        PendingIntent pIntent = PendingIntent.getActivity(context, 0, intent, 0);
+    public void showNotification() {
 
+        PendingIntent pIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         Notification mNotification = new Notification.Builder(context)
 
@@ -326,7 +321,7 @@ public class HomeActivity extends AppCompatActivity
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentIntent(pIntent)
 
-                .addAction(R.mipmap.ic_launcher, "Dismiss", pIntent)
+                .addAction(R.mipmap.ic_launcher, "Turn Off", pIntent)
                 .addAction(0, "View", pIntent)
 
                 .build();
@@ -337,9 +332,9 @@ public class HomeActivity extends AppCompatActivity
         notificationManager.notify(0, mNotification);
     }
 
-    public void cancelNotification(int notificationId){
+    public void cancelNotification(int notificationId) {
 
-        if (Context.NOTIFICATION_SERVICE!=null) {
+        if (Context.NOTIFICATION_SERVICE != null) {
             String ns = Context.NOTIFICATION_SERVICE;
             NotificationManager nMgr = (NotificationManager) context.getApplicationContext().getSystemService(ns);
             nMgr.cancel(notificationId);

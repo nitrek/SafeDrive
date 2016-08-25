@@ -5,4 +5,12 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
+
+    <string name="sms_message">I am Driving! Please Call me Later.</string>
+    <string name="ringing_state">Ringing State Number is - .</string>
+    <string name="sms_sent">Sms sent to </string>
+    <string name="offhook_state">OffHook State</string>
+    <string name="idle_state">idle State</string>
+
+
 </resources>
