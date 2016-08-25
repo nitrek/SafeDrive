@@ -9,8 +9,10 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -23,6 +25,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.CheckBox;
 import android.widget.RelativeLayout;
+import android.widget.Switch;
+import android.widget.Toast;
+import android.widget.ToggleButton;
 
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -51,39 +56,42 @@ public class HomeActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
         restoreCheckBoxState();
+        checkPermissions();
     }
 
     public void restoreCheckBoxState() {
 
-        CheckBox cb1, cb2, cb3, cb4;
+        ToggleButton toggleButton;
+        Switch s1, s2, s3;
 
-        cb1 = (CheckBox) findViewById(R.id.driveModeToggle);
-        cb1.setChecked(getFromSP(DRIVE_MODE));
-        driveToggle(cb1);
+        toggleButton = (ToggleButton) findViewById(R.id.driveModeToggle);
+        toggleButton.setChecked(getFromSP(DRIVE_MODE));
+        driveToggle(toggleButton);
 
-        cb2 = (CheckBox) findViewById(R.id.autoCall);
-        cb2.setChecked(getFromSP(AUTO_CALL));
-        autoCall(cb2);
+        s1 = (Switch) findViewById(R.id.autoCall);
+        s1.setChecked(getFromSP(AUTO_CALL));
+        autoCall(s1);
 
-        cb3 = (CheckBox) findViewById(R.id.autoSms);
-        cb3.setChecked(getFromSP(AUTO_SMS));
-        autoSms(cb3);
+        s2 = (Switch) findViewById(R.id.autoSms);
+        s2.setChecked(getFromSP(AUTO_SMS));
+        autoSms(s1);
 
-        cb4 = (CheckBox) findViewById(R.id.saveLog);
-        cb4.setChecked(getFromSP(CALL_LOG));
-        callLog(cb4);
+        /*s3 = (Switch) findViewById(R.id.saveLog);
+        s3.setChecked(getFromSP(CALL_LOG));
+        callLog(s3);*/
 
-        checkPermissions();
+
     }
 
-    public void checkPermissions()
-    {
+    public void checkPermissions() {
         checkCallPermissions();
         checkSmsPermissions();
         checkCallLogPermissions();
     }
-    public void checkCallLogPermissions(){
+
+    public void checkCallLogPermissions() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_CALL_LOG)
                 != PackageManager.PERMISSION_GRANTED) {
 
@@ -94,6 +102,7 @@ public class HomeActivity extends AppCompatActivity
         }
 
     }
+
     public void checkCallPermissions() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -192,62 +201,117 @@ public class HomeActivity extends AppCompatActivity
     }
 
     public void autoSms(View view) {
-        CheckBox smsToggleButton = (CheckBox) view;
+        Switch smsToggleButton = (Switch) view;
         saveInSp(AUTO_SMS, smsToggleButton.isChecked());
         if (smsToggleButton.isChecked()) {
-            smsToggleButton.setText("Auto Send Sms:On");
+            //smsToggleButton.setText("Auto Send Sms:On");
             smsToggleButton.setBackgroundColor(getResources().getColor(android.R.color.holo_green_light));
         } else {
-            smsToggleButton.setText("Auto Send Sms:Off");
+            //smsToggleButton.setText("Auto Send Sms:Off");
             smsToggleButton.setBackgroundColor(getResources().getColor(android.R.color.holo_red_light));
         }
     }
 
     public void autoCall(View view) {
-        CheckBox callToggleButton = (CheckBox) view;
+        Switch callToggleButton = (Switch) view;
         saveInSp(AUTO_CALL, callToggleButton.isChecked());
         if (callToggleButton.isChecked()) {
-            callToggleButton.setText("Auto Silent Call:On");
+            //  callToggleButton.setText("Auto Silent Call:On");
             callToggleButton.setBackgroundColor(getResources().getColor(android.R.color.holo_green_light));
         } else {
-            callToggleButton.setText("Auto Silent Call:Off");
+            //    callToggleButton.setText("Auto Silent Call:Off");
             callToggleButton.setBackgroundColor(getResources().getColor(android.R.color.holo_red_light));
         }
     }
 
     public void callLog(View view) {
-        CheckBox callLogToggleButton = (CheckBox) view;
+        Switch callLogToggleButton = (Switch) view;
         saveInSp(CALL_LOG, callLogToggleButton.isChecked());
         if (callLogToggleButton.isChecked()) {
-            callLogToggleButton.setText("Save Missed Call/SMS:On");
+            // callLogToggleButton.setText("Save Missed Call/SMS:On");
             callLogToggleButton.setBackgroundColor(getResources().getColor(android.R.color.holo_green_light));
         } else {
-            callLogToggleButton.setText("Save Missed Call/SMS:Off");
+            //  callLogToggleButton.setText("Save Missed Call/SMS:Off");
             callLogToggleButton.setBackgroundColor(getResources().getColor(android.R.color.holo_red_light));
         }
     }
 
+    public void addSwitches() {
+        RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.contentLayout);
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        layoutParams.addRule(RelativeLayout.ABOVE, R.id.driveModeToggle);
+        layoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
+        layoutParams.addRule(RelativeLayout.CENTER_VERTICAL);
+        Switch s1 = new Switch(this);
+        s1.setText("Auto Send Sms");
+        s1.setId(R.id.autoSmsA);
+        layoutParams.removeRule(RelativeLayout.ABOVE);
+        layoutParams.removeRule(RelativeLayout.CENTER_HORIZONTAL);
+        layoutParams.removeRule(RelativeLayout.CENTER_VERTICAL);
+        layoutParams.addRule(RelativeLayout.BELOW, R.id.autoSmsA);
+       /* Switch s2 = new Switch(this);
+        s2.setText("Save Missed Call/SMS");
+        s2.setId(R.id.saveLogA);
+        layoutParams.removeRule(RelativeLayout.BELOW);
+        layoutParams.addRule(RelativeLayout.BELOW, R.id.saveLogA);*/
+        Switch s3 = new Switch(this);
+        s3.setText("Auto Silent Call");
+        s3.setId(R.id.autoCallA);
+        relativeLayout.addView(s1, layoutParams);
+       // relativeLayout.addView(s2, layoutParams);
+        relativeLayout.addView(s3, layoutParams);
+
+    }
+
+    public void removeSwitches() {
+        RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.contentLayout);
+        relativeLayout.removeView(findViewById(R.id.autoSmsA));
+        relativeLayout.removeView(findViewById(R.id.autoCallA));
+        //relativeLayout.removeView(findViewById(R.id.saveLogA));
+    }
+
     public void driveToggle(View view) {
-        CheckBox driveToggleButton = (CheckBox) view;
+        ToggleButton driveToggleButton = (ToggleButton) view;
         RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.contentLayout);
         saveInSp(DRIVE_MODE, driveToggleButton.isChecked());
         if (driveToggleButton.isChecked()) {
             driveToggleButton.setText("Drive Mode:On");
-            driveToggleButton.setBackgroundColor(getResources().getColor(android.R.color.holo_green_light));
+            // driveToggleButton.setBackgroundColor(getResources().getColor(android.R.color.holo_green_light));
             relativeLayout.setBackgroundColor(getResources().getColor(android.R.color.holo_green_dark));
             showNotification();
+            // addSwitches();
+            AudioManager am;
+            am = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+            int previousState = am.getRingerMode();
+            Toast.makeText(this, "previous state" + previousState, Toast.LENGTH_LONG).show();
+            saveInSp(this, IncomingCall.previousRingingState, previousState);
+
+            am.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
+
+
         } else {
             cancelNotification(0);
             driveToggleButton.setText("Drive Mode:Off");
-            driveToggleButton.setBackgroundColor(getResources().getColor(android.R.color.holo_red_light));
+            // driveToggleButton.setBackgroundColor(getResources().getColor(android.R.color.holo_red_light));
             relativeLayout.setBackgroundColor(getResources().getColor(android.R.color.holo_red_dark));
-            CheckBox cb2, cb3, cb4;
-            cb2 = (CheckBox) findViewById(R.id.autoCall);
-            cb3 = (CheckBox) findViewById(R.id.autoSms);
-            cb4 = (CheckBox) findViewById(R.id.saveLog);
-            cb2.setActivated(false);
-            cb3.setActivated(false);
-            cb4.setActivated(false);
+            Switch cb2, cb3, cb4;
+            cb2 = (Switch) findViewById(R.id.autoCall);
+            cb3 = (Switch) findViewById(R.id.autoSms);
+           // cb4 = (Switch) findViewById(R.id.saveLog);
+            cb2.setChecked(false);
+            cb3.setChecked(false);
+            //cb4.setChecked(false);
+            // restoreCheckBoxState();
+            AudioManager am2;
+            am2 = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+            Toast.makeText(this, "previous state now" + getIntFromSP(IncomingCall.previousRingingState), Toast.LENGTH_LONG).show();
+
+            am2.setRingerMode(getIntFromSP(IncomingCall.previousRingingState));
+
+            cb2.setBackgroundColor(getResources().getColor(android.R.color.holo_red_light));
+            cb3.setBackgroundColor(getResources().getColor(android.R.color.holo_red_light));
+           // cb4.setBackgroundColor(getResources().getColor(android.R.color.holo_red_light));
+
         }
     }
 
@@ -256,10 +320,23 @@ public class HomeActivity extends AppCompatActivity
         return preferences.getBoolean(key, false);
     }
 
+
+    private int getIntFromSP(String key) {
+        SharedPreferences preferences = context.getSharedPreferences(context.getResources().getString(R.string.app_name), android.content.Context.MODE_PRIVATE);
+        return preferences.getInt(key, AudioManager.RINGER_MODE_NORMAL);
+    }
+
     private void saveInSp(String key, boolean value) {
         SharedPreferences preferences = getApplicationContext().getSharedPreferences(getResources().getString(R.string.app_name), Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putBoolean(key, value);
+        editor.commit();
+    }
+
+    private void saveInSp(Context context, String key, int value) {
+        SharedPreferences preferences = context.getSharedPreferences(context.getResources().getString(R.string.app_name), android.content.Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putInt(key, value);
         editor.commit();
     }
 
@@ -341,7 +418,7 @@ public class HomeActivity extends AppCompatActivity
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentIntent(pIntent)
 
-                .addAction(R.mipmap.ic_launcher, "Turn Off", pIntent)
+                .addAction(R.drawable.ic_off, "Turn Off", pIntent)
                 .addAction(0, "View", pIntent)
 
                 .build();

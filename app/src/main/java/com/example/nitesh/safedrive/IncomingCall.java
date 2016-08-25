@@ -31,8 +31,10 @@ public class IncomingCall extends BroadcastReceiver {
                 Toast.makeText(context, context.getString(R.string.ringing_state) + incomingNumber, Toast.LENGTH_SHORT).show();
                 if (getBoolFromSP(context, HomeActivity.AUTO_CALL))
                     if (getBoolFromSP(context, HomeActivity.DRIVE_MODE)) {
+/*
 //For Silent mode
                         am.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+*/
 //For Vibrate mode
                         am.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
                     }
@@ -46,10 +48,14 @@ public class IncomingCall extends BroadcastReceiver {
 
             } else if (state.equals(TelephonyManager.EXTRA_STATE_OFFHOOK)) {
                 Toast.makeText(context, context.getString(R.string.offhook_state), Toast.LENGTH_SHORT).show();
-                am.setRingerMode(getIntFromSP(context,IncomingCall.previousRingingState));
+                AudioManager am1;
+                am1 = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+                am1.setRingerMode(getIntFromSP(context,IncomingCall.previousRingingState));
             } else if (state.equals(TelephonyManager.EXTRA_STATE_IDLE)) {
                 Toast.makeText(context, context.getString(R.string.idle_state), Toast.LENGTH_SHORT).show();
-                am.setRingerMode(previousState);
+                AudioManager am2;
+                am2 = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+                am2.setRingerMode(getIntFromSP(context,IncomingCall.previousRingingState));
 
             }
         } catch (Exception e) {

@@ -16,7 +16,8 @@
     >
 
 
-    <CheckBox
+    <Switch
+        android:layout_marginTop="50dp"
         android:layout_width="100dp"
         android:layout_height="50dp"
         android:text="Auto Send Sms"
@@ -24,8 +25,9 @@
         android:onClick="autoSms"
         android:gravity="center_vertical"
         android:layout_marginLeft="100dp"
+        android:layout_marginBottom="50dp"
         />
-    <CheckBox
+    <Switch
         android:layout_width="100dp"
         android:layout_height="50dp"
         android:text="Auto Silent Call"
@@ -33,24 +35,26 @@
         android:onClick="autoCall"
         android:layout_below="@+id/autoSms"
         android:layout_alignStart="@+id/autoSms"
+        android:layout_marginBottom="50dp"
         />
-    <CheckBox
+    <!--<Switch
         android:layout_width="100dp"
         android:layout_height="50dp"
         android:text="Save Missed Call/Sms Log"
         android:id="@+id/saveLog"
         android:onClick="callLog"
         android:layout_below="@+id/autoCall"
-        android:layout_alignStart="@+id/autoSms"
-        />
 
-    <CheckBox
+        android:layout_marginBottom="50dp"
+        android:layout_alignStart="@+id/autoSms"
+        />-->
+
+    <ToggleButton
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="100dp"
         android:text="Drive Mode Off"
         android:textAlignment="center"
         android:id="@+id/driveModeToggle"
-        android:background="@android:color/holo_red_light"
         android:onClick="driveToggle"
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:layout_marginRight="@dimen/activity_horizontal_margin"
