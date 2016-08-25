@@ -7,13 +7,9 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.View;
@@ -25,14 +21,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
-
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.common.api.GoogleApiClient;
 
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -84,10 +74,26 @@ public class HomeActivity extends AppCompatActivity
         cb4.setChecked(getFromSP(CALL_LOG));
         callLog(cb4);
 
-        checkCallPermissions();
-        checkSmsPermissions();
+        checkPermissions();
     }
 
+    public void checkPermissions()
+    {
+        checkCallPermissions();
+        checkSmsPermissions();
+        checkCallLogPermissions();
+    }
+    public void checkCallLogPermissions(){
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_CALL_LOG)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            requestCallLogPermission();
+        } else {
+            Log.i(TAG,
+                    "CALL Log permission has already been granted.");
+        }
+
+    }
     public void checkCallPermissions() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -134,6 +140,18 @@ public class HomeActivity extends AppCompatActivity
 
         } else {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE},
+                    0);
+        }
+    }
+
+    private void requestCallLogPermission() {
+        Log.i(TAG, "Call permission has NOT been granted. Requesting permission.");
+
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                Manifest.permission.READ_CALL_LOG)) {
+
+        } else {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_CALL_LOG},
                     0);
         }
     }
@@ -286,6 +304,8 @@ public class HomeActivity extends AppCompatActivity
         if (id == R.id.nav_about) {
             // Handle the camera action
         } else if (id == R.id.nav_call) {
+            Intent intent = new Intent(this, CallLogging.class);
+            startActivity(intent);
 
         } else if (id == R.id.nav_sms) {
 

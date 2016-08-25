@@ -11,6 +11,8 @@
     <string name="sms_sent">Sms sent to </string>
     <string name="offhook_state">OffHook State</string>
     <string name="idle_state">idle State</string>
+    <string name="title_activity_call_log">CallLog</string>
+    <string name="section_format">Hello World from section: %1$d</string>
 
 
 </resources>
