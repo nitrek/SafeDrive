@@ -16,19 +16,28 @@
     >
 
 
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@mipmap/ic_relax"
+        android:id="@+id/relax"
+        android:layout_above="@+id/stats"
+        />
     <Switch
         android:layout_marginTop="50dp"
-        android:layout_width="100dp"
+        android:layout_width="match_parent"
         android:layout_height="50dp"
         android:text="Auto Send Sms"
         android:id="@+id/autoSms"
         android:onClick="autoSms"
-        android:gravity="center_vertical"
-        android:layout_marginLeft="100dp"
+        android:layout_marginLeft="10dp"
         android:layout_marginBottom="50dp"
+        android:gravity="left"
+        android:padding="@dimen/activity_horizontal_margin"
+
         />
     <Switch
-        android:layout_width="100dp"
+        android:layout_width="match_parent"
         android:layout_height="50dp"
         android:text="Auto Silent Call"
         android:id="@+id/autoCall"
@@ -36,18 +45,31 @@
         android:layout_below="@+id/autoSms"
         android:layout_alignStart="@+id/autoSms"
         android:layout_marginBottom="50dp"
+        android:gravity="left"
+        android:padding="@dimen/activity_horizontal_margin"
         />
-    <!--<Switch
-        android:layout_width="100dp"
-        android:layout_height="50dp"
-        android:text="Save Missed Call/Sms Log"
-        android:id="@+id/saveLog"
-        android:onClick="callLog"
-        android:layout_below="@+id/autoCall"
-
-        android:layout_marginBottom="50dp"
-        android:layout_alignStart="@+id/autoSms"
-        />-->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Drive Safely"
+        android:id="@+id/stats"
+        android:layout_above="@+id/thought"
+        android:layout_marginTop="@dimen/activity_horizontal_margin"
+        android:gravity="center"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/activity_horizontal_margin"
+        />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Drive Safely!"
+        android:id="@+id/thought"
+        android:layout_above="@+id/driveModeToggle"
+        android:gravity="center"
+        android:textColor="@android:color/white"
+        android:layout_margin="20dp"
+        android:textSize="@dimen/activity_horizontal_margin"
+        />
 
     <ToggleButton
         android:layout_width="match_parent"

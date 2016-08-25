@@ -72,15 +72,6 @@ public class CallLogging extends AppCompatActivity {
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-
     }
 
 
@@ -139,32 +130,31 @@ public class CallLogging extends AppCompatActivity {
             ScrollView scrollView = (ScrollView) rootView.findViewById(R.id.section_label);
             ListView lv = new ListView(getContext());
             scrollView.addView(lv);
-            ArrayList<String> callLogs  = new ArrayList<String>();
+            ArrayList<String> callLogs = new ArrayList<String>();
             Uri allCalls = Uri.parse("content://call_log/calls");
             SharedPreferences preferences = getContext().getSharedPreferences(this.getResources().getString(R.string.app_name), android.content.Context.MODE_PRIVATE);
-           // new String[]{String.valueOf( preferences.getLong(HomeActivity.DRIVETIME, System.currentTimeMillis()-10000))}
+            // new String[]{String.valueOf( preferences.getLong(HomeActivity.DRIVETIME, System.currentTimeMillis()-10000))}
             Cursor c = getContext().getContentResolver().query(allCalls, null, null, null, null, null);
             int number = c.getColumnIndex(CallLog.Calls.NUMBER);
             int type = c.getColumnIndex(CallLog.Calls.TYPE);
             int date = c.getColumnIndex(CallLog.Calls.DATE);
             int duration = c.getColumnIndex(CallLog.Calls.DURATION);
-            while (c.moveToNext())
-            {
+            while (c.moveToNext()) {
                 String phNum = c.getString(number);
                 String callType = c.getString(type);
                 String callDate = c.getString(date);
                 Date callDayTime = new Date(Long.valueOf(callDate));
-                Date saveDayTime = new Date(preferences.getLong(HomeActivity.DRIVETIME, System.currentTimeMillis()-10000));
+                Date saveDayTime = new Date(preferences.getLong(HomeActivity.DRIVETIME, System.currentTimeMillis() - 10000));
                 String callDuration = c.getString(duration);
-                String callLogDetails = ("Number: "+phNum+" \n Type: "+callType+" \nDate: "+callDayTime+" \nDuration: "+callDuration);
-                Log.i("time ret",Long.valueOf(callDate).toString());
-                Log.i("time sav",Long.valueOf(preferences.getLong(HomeActivity.DRIVETIME, System.currentTimeMillis()-10000)).toString());
-                 if(Long.valueOf(callDate)>preferences.getLong(HomeActivity.DRIVETIME, System.currentTimeMillis()-10000))
-                callLogs.add(callLogDetails);
+                String callLogDetails = ("Number: " + phNum + " \n Type: " + callType + " \nDate: " + callDayTime + " \nDuration: " + callDuration);
+                Log.i("time ret", Long.valueOf(callDate).toString());
+                Log.i("time sav", Long.valueOf(preferences.getLong(HomeActivity.DRIVETIME, System.currentTimeMillis() - 10000)).toString());
+                if (Long.valueOf(callDate) > preferences.getLong(HomeActivity.DRIVETIME, System.currentTimeMillis() - 10000))
+                    callLogs.add(callLogDetails);
 
             }
             Collections.reverse(callLogs);
-            ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity().getApplicationContext(),android.R.layout.simple_list_item_1,android.R.id.text1,callLogs);
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity().getApplicationContext(), android.R.layout.simple_list_item_1, android.R.id.text1, callLogs);
             lv.setAdapter(adapter);
 
             return rootView;
@@ -193,18 +183,18 @@ public class CallLogging extends AppCompatActivity {
         @Override
         public int getCount() {
             // Show 3 total pages.
-            return 3;
+            return 1;
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-                    return "Incoming Calls";
-                case 1:
+                    return "Calls";
+               /* case 1:
                     return "Outgoing Calls";
                 case 2:
-                    return "Missed Calls";
+                    return "Missed Calls";*/
             }
             return null;
         }

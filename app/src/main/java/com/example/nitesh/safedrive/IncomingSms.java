@@ -3,6 +3,8 @@ package com.example.nitesh.safedrive;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.telephony.SmsManager;
@@ -19,7 +21,8 @@ import java.util.Locale;
 public class IncomingSms extends BroadcastReceiver {
 
     final SmsManager sms = SmsManager.getDefault();
-
+    public static String MESSAGE = "message";
+    public static String SMSCOUNT = "smscount";
     public void onReceive(Context context, Intent intent) {
 
         final Bundle bundle = intent.getExtras();
@@ -37,26 +40,16 @@ public class IncomingSms extends BroadcastReceiver {
 
                     String senderNum = phoneNumber;
                     String message = currentMessage.getDisplayMessageBody();
-                    /*TextToSpeech t1 = new TextToSpeech(context, new TextToSpeech.OnInitListener() {
-                       @Override
-                        public void onInit(int status) {
-                            if(status != TextToSpeech.ERROR) {
-                                try {
-                                    this.setLanguage(Locale.UK);
-                                }
-                                catch (Exception e)
-                                {
 
-                                }
-                            }
-                        }
-                    });
-                    t1.speak(message, TextToSpeech.QUEUE_FLUSH, null);*/
                     Log.i(" SmsReceiver ", " senderNum: " + senderNum + "; message: " + message);
                     int duration = Toast.LENGTH_LONG;
                     Toast toast = Toast.makeText(context,
                             " senderNum: " + senderNum + ", message: " + message, duration);
                     toast.show();
+                    int smsCount = getIntFromSP(context,IncomingSms.SMSCOUNT);
+                    smsCount++;
+                    saveInSp(IncomingSms.SMSCOUNT,smsCount,context);
+
 
                 }
             }
@@ -66,4 +59,16 @@ public class IncomingSms extends BroadcastReceiver {
 
         }
     }
+    private int getIntFromSP(Context context,String key) {
+        SharedPreferences preferences = context.getSharedPreferences(context.getResources().getString(R.string.app_name), android.content.Context.MODE_PRIVATE);
+        return preferences.getInt(key, 0);
+    }
+
+    private void saveInSp(String key, int value,Context context) {
+        SharedPreferences preferences = context.getSharedPreferences(context.getResources().getString(R.string.app_name), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putInt(key, value);
+        editor.commit();
+    }
+
 }
