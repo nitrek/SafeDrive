@@ -32,6 +32,7 @@ import android.widget.ToggleButton;
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     public static final String DRIVE_MODE = "drivemode";
+    public static final String DRIVETIME = "drivetime";
     public static final String AUTO_SMS = "autosms";
     public static final String CALL_LOG = "calllog";
     public static final String AUTO_CALL = "autocall";
@@ -285,7 +286,7 @@ public class HomeActivity extends AppCompatActivity
             int previousState = am.getRingerMode();
             Toast.makeText(this, "previous state" + previousState, Toast.LENGTH_LONG).show();
             saveInSp(this, IncomingCall.previousRingingState, previousState);
-
+            saveInSp(this,DRIVETIME,System.currentTimeMillis());
             am.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
 
 
@@ -326,6 +327,10 @@ public class HomeActivity extends AppCompatActivity
         return preferences.getInt(key, AudioManager.RINGER_MODE_NORMAL);
     }
 
+    private Long getLongFromSP(String key) {
+        SharedPreferences preferences = context.getSharedPreferences(context.getResources().getString(R.string.app_name), android.content.Context.MODE_PRIVATE);
+        return preferences.getLong(key, AudioManager.RINGER_MODE_NORMAL);
+    }
     private void saveInSp(String key, boolean value) {
         SharedPreferences preferences = getApplicationContext().getSharedPreferences(getResources().getString(R.string.app_name), Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
@@ -340,6 +345,12 @@ public class HomeActivity extends AppCompatActivity
         editor.commit();
     }
 
+    private void saveInSp(Context context, String key, Long value) {
+        SharedPreferences preferences = context.getSharedPreferences(context.getResources().getString(R.string.app_name), android.content.Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putLong(key, value);
+        editor.commit();
+    }
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

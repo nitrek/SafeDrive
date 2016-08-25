@@ -1,8 +1,11 @@
 package com.example.nitesh.safedrive;
 
+import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.media.AudioManager;
 import android.net.Uri;
 import android.provider.CallLog;
+import android.provider.Settings;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -14,6 +17,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,6 +30,8 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import java.sql.Date;
+import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -135,7 +141,9 @@ public class CallLogging extends AppCompatActivity {
             scrollView.addView(lv);
             ArrayList<String> callLogs  = new ArrayList<String>();
             Uri allCalls = Uri.parse("content://call_log/calls");
-            Cursor c = getContext().getContentResolver().query(allCalls, null, null, null, null);
+            SharedPreferences preferences = getContext().getSharedPreferences(this.getResources().getString(R.string.app_name), android.content.Context.MODE_PRIVATE);
+           // new String[]{String.valueOf( preferences.getLong(HomeActivity.DRIVETIME, System.currentTimeMillis()-10000))}
+            Cursor c = getContext().getContentResolver().query(allCalls, null, null, null, null, null);
             int number = c.getColumnIndex(CallLog.Calls.NUMBER);
             int type = c.getColumnIndex(CallLog.Calls.TYPE);
             int date = c.getColumnIndex(CallLog.Calls.DATE);
@@ -146,9 +154,14 @@ public class CallLogging extends AppCompatActivity {
                 String callType = c.getString(type);
                 String callDate = c.getString(date);
                 Date callDayTime = new Date(Long.valueOf(callDate));
+                Date saveDayTime = new Date(preferences.getLong(HomeActivity.DRIVETIME, System.currentTimeMillis()-10000));
                 String callDuration = c.getString(duration);
-                String callLogDetails = ("Number: "+phNum+" \n Type: "+callType+" \nDate: "+callDate+" \nDuration: "+callDuration);
+                String callLogDetails = ("Number: "+phNum+" \n Type: "+callType+" \nDate: "+callDayTime+" \nDuration: "+callDuration);
+                Log.i("time ret",Long.valueOf(callDate).toString());
+                Log.i("time sav",Long.valueOf(preferences.getLong(HomeActivity.DRIVETIME, System.currentTimeMillis()-10000)).toString());
+                 if(Long.valueOf(callDate)>preferences.getLong(HomeActivity.DRIVETIME, System.currentTimeMillis()-10000))
                 callLogs.add(callLogDetails);
+
             }
             Collections.reverse(callLogs);
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity().getApplicationContext(),android.R.layout.simple_list_item_1,android.R.id.text1,callLogs);
@@ -156,6 +169,7 @@ public class CallLogging extends AppCompatActivity {
 
             return rootView;
         }
+
     }
 
     /**
