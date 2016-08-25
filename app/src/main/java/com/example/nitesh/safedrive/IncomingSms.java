@@ -21,8 +21,7 @@ import java.util.Locale;
 public class IncomingSms extends BroadcastReceiver {
 
     final SmsManager sms = SmsManager.getDefault();
-    public static String MESSAGE = "message";
-    public static String SMSCOUNT = "smscount";
+
     public void onReceive(Context context, Intent intent) {
 
         final Bundle bundle = intent.getExtras();
@@ -46,9 +45,9 @@ public class IncomingSms extends BroadcastReceiver {
                     Toast toast = Toast.makeText(context,
                             " senderNum: " + senderNum + ", message: " + message, duration);
                     toast.show();
-                    int smsCount = getIntFromSP(context,IncomingSms.SMSCOUNT);
+                    int smsCount = getIntFromSP(context,Constants.SMSCOUNT);
                     smsCount++;
-                    saveInSp(IncomingSms.SMSCOUNT,smsCount,context);
+                    saveInSp(Constants.SMSCOUNT,smsCount,context);
 
 
                 }

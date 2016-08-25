@@ -144,12 +144,12 @@ public class CallLogging extends AppCompatActivity {
                 String callType = c.getString(type);
                 String callDate = c.getString(date);
                 Date callDayTime = new Date(Long.valueOf(callDate));
-                Date saveDayTime = new Date(preferences.getLong(HomeActivity.DRIVETIME, System.currentTimeMillis() - 10000));
+                Date saveDayTime = new Date(preferences.getLong(Constants.DRIVETIME, System.currentTimeMillis() - 10000));
                 String callDuration = c.getString(duration);
                 String callLogDetails = ("Number: " + phNum + " \n Type: " + callType + " \nDate: " + callDayTime + " \nDuration: " + callDuration);
                 Log.i("time ret", Long.valueOf(callDate).toString());
-                Log.i("time sav", Long.valueOf(preferences.getLong(HomeActivity.DRIVETIME, System.currentTimeMillis() - 10000)).toString());
-                if (Long.valueOf(callDate) > preferences.getLong(HomeActivity.DRIVETIME, System.currentTimeMillis() - 10000))
+                Log.i("time sav", Long.valueOf(preferences.getLong(Constants.DRIVETIME, System.currentTimeMillis() - 10000)).toString());
+                if (Long.valueOf(callDate) > preferences.getLong(Constants.DRIVETIME, System.currentTimeMillis() - 10000))
                     callLogs.add(callLogDetails);
 
             }

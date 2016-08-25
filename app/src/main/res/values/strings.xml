@@ -88,5 +88,6 @@
     <string name="title_activity_about_us">AboutUs</string>
     <string name="aboutUs">App Developed By </string>
     <string name="thankDeveloper">Send a Thanks!:)</string>
+    <string name="title_activity_setting">SettingActivity</string>
 
 </resources>
