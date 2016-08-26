@@ -159,7 +159,7 @@ public class HomeActivity extends AppCompatActivity
             AudioManager am;
             am = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
             int previousState = am.getRingerMode();
-            Toast.makeText(this, "previous state" + previousState, Toast.LENGTH_LONG).show();
+            //Toast.makeText(this, "previous state" + previousState, Toast.LENGTH_LONG).show();
             if (!getFromSP(Constants.FIRST_CALL)) {
                 saveInSp(Constants.FIRST_CALL, true);
                 saveInSp(Constants.previousRingingState, previousState);
@@ -276,10 +276,7 @@ public class HomeActivity extends AppCompatActivity
         saveInSp(Constants.SENTSMSCOUNT, sentSmsCount);
 
         Intent phoneIntent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + sosNumber));
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-            startActivity(phoneIntent);
-            return;
-        }
+        startActivity(phoneIntent);
 
 
     }
@@ -425,6 +422,7 @@ public class HomeActivity extends AppCompatActivity
             checkCallPermissions();
             checkSmsPermissions();
             checkCallLogPermissions();
+            checkCallingPermissions();
         }
 
         public void checkCallLogPermissions() {
@@ -439,8 +437,31 @@ public class HomeActivity extends AppCompatActivity
 
         }
 
+        public void checkCallingPermissions() {
+            if (ActivityCompat.checkSelfPermission(getBaseContext(), Manifest.permission.CALL_PHONE)
+                    != PackageManager.PERMISSION_GRANTED) {
+
+                requestCallLingPermission();
+            } else {
+                Log.i(TAG,
+                        "CALL Log permission has already been granted.");
+            }
+
+        }
+
         public void checkCallPermissions() {
             if (ActivityCompat.checkSelfPermission(getBaseContext(), Manifest.permission.READ_PHONE_STATE)
+                    != PackageManager.PERMISSION_GRANTED) {
+
+                requestCallPermission();
+            } else {
+                Log.i(TAG,
+                        "CALL permission has already been granted.");
+            }
+        }
+
+        public void requestCallLingPermission() {
+            if (ActivityCompat.checkSelfPermission(getBaseContext(), Manifest.permission.CALL_PHONE)
                     != PackageManager.PERMISSION_GRANTED) {
 
                 requestCallPermission();

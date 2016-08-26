@@ -155,10 +155,7 @@ public class CallLogging extends AppCompatActivity {
                         number = txt.substring(7, 18);
                     Toast.makeText(getContext(), number, Toast.LENGTH_LONG).show();
                     Intent phoneIntent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + number));
-                    if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
                         startActivity(phoneIntent);
-                        return;
-                    }
                 }
             });
             return rootView;
