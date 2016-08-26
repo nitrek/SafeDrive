@@ -21,7 +21,9 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import java.util.Calendar;
-
+/**
+ * Created by nitesh on 25-08-2016.
+ */
 public class SettingsActivity extends AppCompatActivity {
 
     @Override
@@ -49,6 +51,61 @@ public class SettingsActivity extends AppCompatActivity {
                 if(smsTextString.length()<5)
                     smsTextString = getString(R.string.sms_message);
                 saveInSp(Constants.MESSAGE,smsTextString);
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
+    }
+    public void sosNumber(View view)
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Enter Sos Number");
+        final EditText input = new EditText(this);
+        input.setInputType(InputType.TYPE_CLASS_PHONE);
+        input.setText(getStringFromSP(Constants.SOS_NUMBER));
+       if(input.getText().length()<10)
+           input.setText(getString(R.string.defaultSosNumber));
+        builder.setView(input);
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String sosNumberString = input.getText().toString();
+                if(sosNumberString.length()<10)
+                    sosNumberString = getString(R.string.defaultSosNumber);
+                saveInSp(Constants.SOS_NUMBER,sosNumberString);
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
+    }
+    public void sosText(View view)
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Enter SOS String");
+        final EditText input = new EditText(this);
+        input.setText(getStringFromSP(Constants.SOS_TEXT));
+        if(input.getText().length()<5)
+            input.setText(getString(R.string.defaultSosText));
+        builder.setView(input);
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String sosTextString = input.getText().toString();
+                if(sosTextString.length()<5)
+                    sosTextString = getString(R.string.defaultSosText);
+                saveInSp(Constants.SOS_TEXT,sosTextString);
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {

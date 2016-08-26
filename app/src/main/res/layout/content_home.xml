@@ -59,6 +59,20 @@
         android:textColor="@android:color/white"
         android:textSize="@dimen/activity_horizontal_margin"
         />
+
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/thought"
+        android:layout_below="@+id/autoCall"
+        android:text="SOS"
+        android:onClick="SOS"
+        android:id="@+id/sos"
+        android:textColor="@android:color/white"
+        android:textSize="20dp"
+        android:background="@android:drawable/alert_dark_frame"
+        />
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -80,6 +94,13 @@
         android:onClick="driveToggle"
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
+
+    <TextClock
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textClock"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true" />
 </RelativeLayout>

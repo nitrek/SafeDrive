@@ -5,13 +5,13 @@ package com.example.nitesh.safedrive;
  */
 public class Constants {
 
-    public static String previousRingingState                   = "previousRingingState";
+    public static final String previousRingingState             = "previousRingingState";
 
-    public static String previousRingingStateOncall             = "previousRingingStateOncall";
+    public static final String previousRingingStateOncall       = "previousRingingStateOncall";
 
-    public static String CALLCOUNT                              = "callcount";
+    public static final String CALLCOUNT                        = "callcount";
 
-    public static String SENTSMSCOUNT                           = "sentsmscount";
+    public static final String SENTSMSCOUNT                     = "sentsmscount";
 
     public static final String DRIVE_MODE                       = "drivemode";
 
@@ -25,9 +25,16 @@ public class Constants {
 
     public static final String NOTIFICATION_ALLOW               = "notificationAllow";
 
-    public static String MESSAGE                                = "message";
+    public static final String MESSAGE                          = "message";
 
-    public static String SMSCOUNT                               = "smscount";
+    public static final String SMSCOUNT                         = "smscount";
 
-    public static String AUTO_STAR_TIME                        = "autostarttime";
+    public static final String AUTO_STAR_TIME                   = "autostarttime";
+
+    public static final String FIRST_CALL                       = "autostarttime";
+
+    public static final String SOS_NUMBER                       = "sosnumber";
+
+    public static final String SOS_TEXT                         = "sostext";
 }
+

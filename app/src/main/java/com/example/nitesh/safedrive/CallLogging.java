@@ -1,5 +1,6 @@
 package com.example.nitesh.safedrive;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.media.AudioManager;
@@ -17,6 +18,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -24,10 +26,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.sql.Date;
 import java.sql.Time;
@@ -36,21 +40,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 
+/**
+ * Created by nitesh on 25-08-2016.
+ */
 public class CallLogging extends AppCompatActivity {
 
-    /**
-     * The {@link android.support.v4.view.PagerAdapter} that will provide
-     * fragments for each of the sections. We use a
-     * {@link FragmentPagerAdapter} derivative, which will keep every
-     * loaded fragment in memory. If this becomes too memory intensive, it
-     * may be best to switch to a
-     * {@link android.support.v4.app.FragmentStatePagerAdapter}.
-     */
     private SectionsPagerAdapter mSectionsPagerAdapter;
-
-    /**
-     * The {@link ViewPager} that will host the section contents.
-     */
     private ViewPager mViewPager;
 
     @Override
@@ -61,11 +56,8 @@ public class CallLogging extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        // Create the adapter that will return a fragment for each of the three
-        // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
-        // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
@@ -77,49 +69,28 @@ public class CallLogging extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_call_log, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    /**
-     * A placeholder fragment containing a simple view.
-     */
     public static class PlaceholderFragment extends Fragment {
-        /**
-         * The fragment argument representing the section number for this
-         * fragment.
-         */
-        private static final String ARG_SECTION_NUMBER = "section_number";
 
         public PlaceholderFragment() {
         }
-
-        /**
-         * Returns a new instance of this fragment for the given section
-         * number.
-         */
         public static PlaceholderFragment newInstance(int sectionNumber) {
             PlaceholderFragment fragment = new PlaceholderFragment();
-            Bundle args = new Bundle();
-            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-            fragment.setArguments(args);
-
             return fragment;
         }
 
@@ -141,14 +112,29 @@ public class CallLogging extends AppCompatActivity {
             int duration = c.getColumnIndex(CallLog.Calls.DURATION);
             while (c.moveToNext()) {
                 String phNum = c.getString(number);
-                String callType = c.getString(type);
+                int intCallType = c.getInt(type);
                 String callDate = c.getString(date);
                 Date callDayTime = new Date(Long.valueOf(callDate));
                 Date saveDayTime = new Date(preferences.getLong(Constants.DRIVETIME, System.currentTimeMillis() - 10000));
                 String callDuration = c.getString(duration);
+                String callType = "Incoming";
+               switch (intCallType)
+               {
+                   case CallLog.Calls.INCOMING_TYPE:
+                       callType="Incoming";
+                       break;
+                   case CallLog.Calls.OUTGOING_TYPE:
+                       callType="Outgoing";
+                       break;
+                   case CallLog.Calls.MISSED_TYPE:
+                       callType="Missed";
+                       break;
+               }
                 String callLogDetails = ("Number: " + phNum + " \n Type: " + callType + " \nDate: " + callDayTime + " \nDuration: " + callDuration);
                 Log.i("time ret", Long.valueOf(callDate).toString());
                 Log.i("time sav", Long.valueOf(preferences.getLong(Constants.DRIVETIME, System.currentTimeMillis() - 10000)).toString());
+
+
                 if (Long.valueOf(callDate) > preferences.getLong(Constants.DRIVETIME, System.currentTimeMillis() - 10000))
                     callLogs.add(callLogDetails);
 
@@ -156,16 +142,21 @@ public class CallLogging extends AppCompatActivity {
             Collections.reverse(callLogs);
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity().getApplicationContext(), android.R.layout.simple_list_item_1, android.R.id.text1, callLogs);
             lv.setAdapter(adapter);
-
+            lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    String txt = (String)parent.getItemAtPosition(position);
+                    String number = txt.substring(11,22);
+                    Toast.makeText(getContext(),number,Toast.LENGTH_LONG).show();
+                    Intent phoneIntent = new Intent(Intent.ACTION_CALL,Uri.parse("tel:"+number));
+                    startActivity(phoneIntent);
+                }
+            });
             return rootView;
         }
 
     }
 
-    /**
-     * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
-     * one of the sections/tabs/pages.
-     */
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
         public SectionsPagerAdapter(FragmentManager fm) {
@@ -174,15 +165,11 @@ public class CallLogging extends AppCompatActivity {
 
         @Override
         public Fragment getItem(int position) {
-            // getItem is called to instantiate the fragment for the given page.
-            // Return a PlaceholderFragment (defined as a static inner class below).
-
             return PlaceholderFragment.newInstance(position + 1);
         }
 
         @Override
         public int getCount() {
-            // Show 3 total pages.
             return 1;
         }
 

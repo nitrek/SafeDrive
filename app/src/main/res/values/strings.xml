@@ -90,4 +90,6 @@
     <string name="thankDeveloper">Send a Thanks!:)</string>
     <string name="title_activity_setting">SettingActivity</string>
 
+    <string name="defaultSosNumber">8288838083</string>
+    <string name="defaultSosText">Help me!</string>
 </resources>

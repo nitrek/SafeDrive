@@ -14,6 +14,7 @@ import android.media.AudioManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
+import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -24,6 +25,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
@@ -60,7 +62,7 @@ public class HomeActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
 
-       // checkPermissions();
+        // checkPermissions();
         AsyncTaskForPermissions runner = new AsyncTaskForPermissions();
         runner.execute();
         restoreCheckBoxState();
@@ -121,10 +123,12 @@ public class HomeActivity extends AppCompatActivity
     public void addSwitches() {
         Switch s1 = (Switch) findViewById(R.id.autoSms);
         Switch s2 = (Switch) findViewById(R.id.autoCall);
+        Button b1 = (Button) findViewById(R.id.sos);
         ImageView im = (ImageView) findViewById(R.id.relax);
         im.setVisibility(View.GONE);
         s1.setVisibility(View.VISIBLE);
         s2.setVisibility(View.VISIBLE);
+        b1.setVisibility(View.VISIBLE);
 
 
     }
@@ -133,10 +137,12 @@ public class HomeActivity extends AppCompatActivity
         Switch s1 = (Switch) findViewById(R.id.autoSms);
         Switch s2 = (Switch) findViewById(R.id.autoCall);
         ImageView im = (ImageView) findViewById(R.id.relax);
+        Button b1 = (Button) findViewById(R.id.sos);
 
         s1.setVisibility(View.GONE);
         s2.setVisibility(View.GONE);
         im.setVisibility(View.VISIBLE);
+        b1.setVisibility(View.GONE);
     }
 
     public void driveToggle(View view) {
@@ -153,8 +159,11 @@ public class HomeActivity extends AppCompatActivity
             am = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
             int previousState = am.getRingerMode();
             Toast.makeText(this, "previous state" + previousState, Toast.LENGTH_LONG).show();
-            saveInSp(Constants.previousRingingState, previousState);
-            saveInSp(Constants.DRIVETIME, System.currentTimeMillis());
+            if (!getFromSP(Constants.FIRST_CALL)) {
+                saveInSp(Constants.FIRST_CALL, true);
+                saveInSp(Constants.previousRingingState, previousState);
+                saveInSp(Constants.DRIVETIME, System.currentTimeMillis());
+            }
             am.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
             showThought();
 
@@ -162,6 +171,7 @@ public class HomeActivity extends AppCompatActivity
 
         } else {
             cancelNotification(0);
+            saveInSp(Constants.FIRST_CALL, false);
             driveToggleButton.setText("Drive Mode:Off");
             relativeLayout.setBackgroundColor(getResources().getColor(android.R.color.holo_red_dark));
             Switch cb2, cb3;
@@ -201,9 +211,9 @@ public class HomeActivity extends AppCompatActivity
         return preferences.getInt(key, 0);
     }
 
-    private Long getLongFromSP(String key) {
+    private String getStringFromSP(String key) {
         SharedPreferences preferences = getSharedPreferences(getResources().getString(R.string.app_name), android.content.Context.MODE_PRIVATE);
-        return preferences.getLong(key, 0);
+        return preferences.getString(key,"");
     }
 
     private void saveInSp(String key, boolean value) {
@@ -249,6 +259,23 @@ public class HomeActivity extends AppCompatActivity
 
     }
 
+    public void SOS(View view) {
+
+        String sosNumber = getStringFromSP(Constants.SOS_NUMBER);
+        if(sosNumber.length()<10)
+            sosNumber = getString(R.string.defaultSosNumber);
+        String sosText = getStringFromSP(Constants.SOS_TEXT);
+        if(sosText.length()<10)
+            sosText = getString(R.string.defaultSosText);
+        PendingIntent pi = PendingIntent.getActivity(context, 0, intent, 0);
+        SmsManager smsManager = SmsManager.getDefault();
+        smsManager.sendTextMessage(sosNumber, null,sosText, pi, null);
+        int sentSmsCount = getIntFromSP(Constants.SENTSMSCOUNT);
+        sentSmsCount++;
+        saveInSp(Constants.SENTSMSCOUNT,sentSmsCount);
+
+    }
+
     public void showNotification() {
 
         PendingIntent pIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -259,15 +286,15 @@ public class HomeActivity extends AppCompatActivity
 
                 .setContentTitle("DriveSafe!")
                 .setContentText("Safe mode is on!")
-                .setSmallIcon(R.mipmap.ic_launcher)
+                .setSmallIcon(R.drawable.car)
                 .setContentIntent(pIntent)
                 .addAction(R.drawable.ic_off, "Settings", pIntent2)
                 .addAction(0, "View", pIntent)
                 .setOngoing(true)
                 .build();
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-       if(getFromSP(Constants.NOTIFICATION_ALLOW))
-        notificationManager.notify(0, mNotification);
+        if (getFromSP(Constants.NOTIFICATION_ALLOW))
+            notificationManager.notify(0, mNotification);
     }
 
     public void cancelNotification(int notificationId) {
@@ -360,6 +387,7 @@ public class HomeActivity extends AppCompatActivity
         super.onStop();
 
     }
+
     private class AsyncTaskForPermissions extends AsyncTask<String, Void, Void> {
 
         private String resp;
@@ -384,6 +412,7 @@ public class HomeActivity extends AppCompatActivity
 
             return null;
         }
+
         public void checkPermissions() {
             checkCallPermissions();
             checkSmsPermissions();
