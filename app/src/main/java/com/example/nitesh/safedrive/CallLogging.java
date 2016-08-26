@@ -1,7 +1,9 @@
 package com.example.nitesh.safedrive;
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.media.AudioManager;
 import android.net.Uri;
@@ -10,6 +12,7 @@ import android.provider.Settings;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -89,6 +92,7 @@ public class CallLogging extends AppCompatActivity {
 
         public PlaceholderFragment() {
         }
+
         public static PlaceholderFragment newInstance(int sectionNumber) {
             PlaceholderFragment fragment = new PlaceholderFragment();
             return fragment;
@@ -115,21 +119,20 @@ public class CallLogging extends AppCompatActivity {
                 int intCallType = c.getInt(type);
                 String callDate = c.getString(date);
                 Date callDayTime = new Date(Long.valueOf(callDate));
-                Date saveDayTime = new Date(preferences.getLong(Constants.DRIVETIME, System.currentTimeMillis() - 10000));
+                // Date saveDayTime = new Date(preferences.getLong(Constants.DRIVETIME, System.currentTimeMillis() - 10000));
                 String callDuration = c.getString(duration);
                 String callType = "Incoming";
-               switch (intCallType)
-               {
-                   case CallLog.Calls.INCOMING_TYPE:
-                       callType="Incoming";
-                       break;
-                   case CallLog.Calls.OUTGOING_TYPE:
-                       callType="Outgoing";
-                       break;
-                   case CallLog.Calls.MISSED_TYPE:
-                       callType="Missed";
-                       break;
-               }
+                switch (intCallType) {
+                    case CallLog.Calls.INCOMING_TYPE:
+                        callType = "Incoming";
+                        break;
+                    case CallLog.Calls.OUTGOING_TYPE:
+                        callType = "Outgoing";
+                        break;
+                    case CallLog.Calls.MISSED_TYPE:
+                        callType = "Missed";
+                        break;
+                }
                 String callLogDetails = ("Number: " + phNum + " \n Type: " + callType + " \nDate: " + callDayTime + " \nDuration: " + callDuration);
                 Log.i("time ret", Long.valueOf(callDate).toString());
                 Log.i("time sav", Long.valueOf(preferences.getLong(Constants.DRIVETIME, System.currentTimeMillis() - 10000)).toString());
@@ -137,7 +140,6 @@ public class CallLogging extends AppCompatActivity {
 
                 if (Long.valueOf(callDate) > preferences.getLong(Constants.DRIVETIME, System.currentTimeMillis() - 10000))
                     callLogs.add(callLogDetails);
-
             }
             Collections.reverse(callLogs);
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity().getApplicationContext(), android.R.layout.simple_list_item_1, android.R.id.text1, callLogs);
@@ -145,11 +147,18 @@ public class CallLogging extends AppCompatActivity {
             lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    String txt = (String)parent.getItemAtPosition(position);
-                    String number = txt.substring(11,22);
-                    Toast.makeText(getContext(),number,Toast.LENGTH_LONG).show();
-                    Intent phoneIntent = new Intent(Intent.ACTION_CALL,Uri.parse("tel:"+number));
-                    startActivity(phoneIntent);
+                    String txt = (String) parent.getItemAtPosition(position);
+                    String number = txt.substring(7, 22);
+                    if (number.contains("+91"))
+                        number = txt.substring(11, 22);
+                    else
+                        number = txt.substring(7, 18);
+                    Toast.makeText(getContext(), number, Toast.LENGTH_LONG).show();
+                    Intent phoneIntent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + number));
+                    if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                        startActivity(phoneIntent);
+                        return;
+                    }
                 }
             });
             return rootView;

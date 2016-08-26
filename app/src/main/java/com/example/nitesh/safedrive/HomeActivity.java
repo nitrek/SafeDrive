@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.media.AudioManager;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
@@ -213,7 +214,7 @@ public class HomeActivity extends AppCompatActivity
 
     private String getStringFromSP(String key) {
         SharedPreferences preferences = getSharedPreferences(getResources().getString(R.string.app_name), android.content.Context.MODE_PRIVATE);
-        return preferences.getString(key,"");
+        return preferences.getString(key, "");
     }
 
     private void saveInSp(String key, boolean value) {
@@ -262,17 +263,24 @@ public class HomeActivity extends AppCompatActivity
     public void SOS(View view) {
 
         String sosNumber = getStringFromSP(Constants.SOS_NUMBER);
-        if(sosNumber.length()<10)
+        if (sosNumber.length() < 10)
             sosNumber = getString(R.string.defaultSosNumber);
         String sosText = getStringFromSP(Constants.SOS_TEXT);
-        if(sosText.length()<10)
+        if (sosText.length() < 10)
             sosText = getString(R.string.defaultSosText);
         PendingIntent pi = PendingIntent.getActivity(context, 0, intent, 0);
         SmsManager smsManager = SmsManager.getDefault();
-        smsManager.sendTextMessage(sosNumber, null,sosText, pi, null);
+        smsManager.sendTextMessage(sosNumber, null, sosText, pi, null);
         int sentSmsCount = getIntFromSP(Constants.SENTSMSCOUNT);
         sentSmsCount++;
-        saveInSp(Constants.SENTSMSCOUNT,sentSmsCount);
+        saveInSp(Constants.SENTSMSCOUNT, sentSmsCount);
+
+        Intent phoneIntent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + sosNumber));
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+            startActivity(phoneIntent);
+            return;
+        }
+
 
     }
 
