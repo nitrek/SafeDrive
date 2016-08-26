@@ -2,30 +2,29 @@ package com.example.nitesh.safedrive;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.Intent;
-
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
-import android.telephony.SmsManager;
-import android.util.Log;
-import android.view.View;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
+import android.telephony.SmsManager;
+import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -34,7 +33,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
-import java.util.ArrayList;
 import java.util.Random;
 
 public class HomeActivity extends AppCompatActivity
@@ -63,12 +61,112 @@ public class HomeActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
 
-        // checkPermissions();
-        AsyncTaskForPermissions runner = new AsyncTaskForPermissions();
-        runner.execute();
+        checkPermissions();
+        //AsyncTaskForPermissions runner = new AsyncTaskForPermissions();
+        //runner.execute("10");
         restoreCheckBoxState();
         showThought();
 
+    }
+
+    public void checkPermissions() {
+        checkCallPermissions();
+        checkSmsPermissions();
+        checkCallLogPermissions();
+        checkCallingPermissions();
+    }
+
+    public void checkCallLogPermissions() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_CALL_LOG)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            requestCallLogPermission();
+        } else {
+            Log.i(TAG,
+                    "CALL Log permission has already been granted.");
+        }
+
+    }
+
+    public void checkCallingPermissions() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            requestCallLingPermission();
+        } else {
+            Log.i(TAG,
+                    "CALL Log permission has already been granted.");
+        }
+
+    }
+
+    public void checkCallPermissions() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            requestCallPermission();
+        } else {
+            Log.i(TAG,
+                    "CALL permission has already been granted.");
+        }
+    }
+
+    public void requestCallLingPermission() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            requestCallPermission();
+        } else {
+            Log.i(TAG,
+                    "CALL permission has already been granted.");
+        }
+    }
+
+    public void checkSmsPermissions() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            requestSendSmsPermission();
+        } else {
+            Log.i(TAG,
+                    "Sms permission has already been granted.");
+        }
+    }
+
+    private void requestCallPermission() {
+        Log.i(TAG, "Call permission has NOT been granted. Requesting permission.");
+
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                Manifest.permission.READ_PHONE_STATE)) {
+
+        } else {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE},
+                    0);
+        }
+    }
+
+    private void requestCallLogPermission() {
+        Log.i(TAG, "Call permission has NOT been granted. Requesting permission.");
+
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                Manifest.permission.READ_CALL_LOG)) {
+
+        } else {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_CALL_LOG},
+                    0);
+        }
+    }
+
+    private void requestSendSmsPermission() {
+        Log.i(TAG, "Send Sms permission has NOT been granted. Requesting permission.");
+
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                Manifest.permission.SEND_SMS)) {
+
+        } else {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.SEND_SMS},
+                    3);
+        }
     }
 
     public void restoreCheckBoxState() {
@@ -126,10 +224,44 @@ public class HomeActivity extends AppCompatActivity
         Switch s2 = (Switch) findViewById(R.id.autoCall);
         Button b1 = (Button) findViewById(R.id.sos);
         ImageView im = (ImageView) findViewById(R.id.relax);
+
         im.setVisibility(View.GONE);
         s1.setVisibility(View.VISIBLE);
         s2.setVisibility(View.VISIBLE);
         b1.setVisibility(View.VISIBLE);
+
+
+    }
+
+    public void selectImage() {
+        ImageView im = (ImageView) findViewById(R.id.relax);
+
+        Random r = new Random();
+        int randIndex = r.nextInt(6 - 0 + 1);
+        Resources res = getResources();
+        switch (randIndex) {
+            case 0:
+                im.setImageResource(R.mipmap.ic_bye_image1);
+                break;
+            case 1:
+                im.setImageResource(R.mipmap.ic_bye_image2);
+                break;
+            case 2:
+                im.setImageResource(R.mipmap.ic_bye_image3);
+                break;
+            case 3:
+                im.setImageResource(R.mipmap.ic_bye_image4);
+                break;
+            case 4:
+                im.setImageResource(R.mipmap.ic_bye_image5);
+                break;
+            case 5:
+                im.setImageResource(R.mipmap.ic_bye_image6);
+                break;
+            case 6:
+                im.setImageResource(R.mipmap.ic_bye_image7);
+                break;
+        }
 
 
     }
@@ -144,6 +276,7 @@ public class HomeActivity extends AppCompatActivity
         s2.setVisibility(View.GONE);
         im.setVisibility(View.VISIBLE);
         b1.setVisibility(View.GONE);
+        selectImage();
     }
 
     public void driveToggle(View view) {
@@ -167,8 +300,15 @@ public class HomeActivity extends AppCompatActivity
             }
             am.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
             showThought();
-
+            Switch cb2, cb3;
+            cb2 = (Switch) findViewById(R.id.autoCall);
+            cb3 = (Switch) findViewById(R.id.autoSms);
+            cb2.setChecked(true);
+            cb3.setChecked(true);
             textView.setVisibility(View.GONE);
+
+            cb2.setBackgroundColor(getResources().getColor(android.R.color.holo_green_light));
+            cb3.setBackgroundColor(getResources().getColor(android.R.color.holo_green_light));
 
         } else {
             cancelNotification(0);
@@ -240,7 +380,13 @@ public class HomeActivity extends AppCompatActivity
 
     public void showThought() {
         TextView tv = (TextView) findViewById(R.id.thought);
-        ArrayList<String> thoughts = new ArrayList<String>();
+
+        String[] adapter;
+        adapter = getResources().getStringArray(R.array.thoughts);
+
+
+
+        /*ArrayList<String> thoughts = new ArrayList<String>();
         thoughts.add(getResources().getString(R.string.thought1));
         thoughts.add(getResources().getString(R.string.thought2));
         thoughts.add(getResources().getString(R.string.thought3));
@@ -251,12 +397,12 @@ public class HomeActivity extends AppCompatActivity
         thoughts.add(getResources().getString(R.string.thought8));
         thoughts.add(getResources().getString(R.string.thought9));
         thoughts.add(getResources().getString(R.string.thought10));
-        thoughts.add(getResources().getString(R.string.thought11));
+        thoughts.add(getResources().getString(R.string.thought11));*/
 
         Random r = new Random();
-        int randIndex = r.nextInt(10 - 0 + 1);
+        int randIndex = r.nextInt(adapter.length - 1 - 0 + 1);
 
-        tv.setText(thoughts.get(randIndex));
+        tv.setText(adapter[randIndex]);
 
     }
 
@@ -396,7 +542,6 @@ public class HomeActivity extends AppCompatActivity
     private class AsyncTaskForPermissions extends AsyncTask<String, Void, Void> {
 
         private String resp;
-
         @Override
         protected Void doInBackground(String... params) {
             publishProgress(); // Calls onProgressUpdate()
@@ -406,7 +551,7 @@ public class HomeActivity extends AppCompatActivity
                 // Sleeping for given time period
                 Thread.sleep(time);
                 resp = "Slept for " + time + " milliseconds";
-                checkPermissions();
+                //    checkPermissions();
             } catch (InterruptedException e) {
                 e.printStackTrace();
                 resp = e.getMessage();
@@ -417,131 +562,9 @@ public class HomeActivity extends AppCompatActivity
 
             return null;
         }
-
-        public void checkPermissions() {
-            checkCallPermissions();
-            checkSmsPermissions();
-            checkCallLogPermissions();
-            checkCallingPermissions();
-        }
-
-        public void checkCallLogPermissions() {
-            if (ActivityCompat.checkSelfPermission(getBaseContext(), Manifest.permission.READ_CALL_LOG)
-                    != PackageManager.PERMISSION_GRANTED) {
-
-                requestCallLogPermission();
-            } else {
-                Log.i(TAG,
-                        "CALL Log permission has already been granted.");
-            }
-
-        }
-
-        public void checkCallingPermissions() {
-            if (ActivityCompat.checkSelfPermission(getBaseContext(), Manifest.permission.CALL_PHONE)
-                    != PackageManager.PERMISSION_GRANTED) {
-
-                requestCallLingPermission();
-            } else {
-                Log.i(TAG,
-                        "CALL Log permission has already been granted.");
-            }
-
-        }
-
-        public void checkCallPermissions() {
-            if (ActivityCompat.checkSelfPermission(getBaseContext(), Manifest.permission.READ_PHONE_STATE)
-                    != PackageManager.PERMISSION_GRANTED) {
-
-                requestCallPermission();
-            } else {
-                Log.i(TAG,
-                        "CALL permission has already been granted.");
-            }
-        }
-
-        public void requestCallLingPermission() {
-            if (ActivityCompat.checkSelfPermission(getBaseContext(), Manifest.permission.CALL_PHONE)
-                    != PackageManager.PERMISSION_GRANTED) {
-
-                requestCallPermission();
-            } else {
-                Log.i(TAG,
-                        "CALL permission has already been granted.");
-            }
-        }
-
-        public void checkSmsPermissions() {
-            if (ActivityCompat.checkSelfPermission(getBaseContext(), Manifest.permission.SEND_SMS)
-                    != PackageManager.PERMISSION_GRANTED) {
-
-                requestSendSmsPermission();
-            } else {
-                Log.i(TAG,
-                        "Sms permission has already been granted.");
-            }
-        }
-
-        private void requestCallPermission() {
-            Log.i(TAG, "Call permission has NOT been granted. Requesting permission.");
-
-            if (ActivityCompat.shouldShowRequestPermissionRationale((Activity) getApplicationContext(),
-                    Manifest.permission.READ_PHONE_STATE)) {
-
-            } else {
-                ActivityCompat.requestPermissions((Activity) getApplicationContext(), new String[]{Manifest.permission.READ_PHONE_STATE},
-                        0);
-            }
-        }
-
-        private void requestCallLogPermission() {
-            Log.i(TAG, "Call permission has NOT been granted. Requesting permission.");
-
-            if (ActivityCompat.shouldShowRequestPermissionRationale((Activity) getApplicationContext(),
-                    Manifest.permission.READ_CALL_LOG)) {
-
-            } else {
-                ActivityCompat.requestPermissions((Activity) getApplicationContext(), new String[]{Manifest.permission.READ_CALL_LOG},
-                        0);
-            }
-        }
-
-        private void requestSendSmsPermission() {
-            Log.i(TAG, "Send Sms permission has NOT been granted. Requesting permission.");
-
-            if (ActivityCompat.shouldShowRequestPermissionRationale((Activity) getApplicationContext(),
-                    Manifest.permission.SEND_SMS)) {
-
-            } else {
-                ActivityCompat.requestPermissions((Activity) getApplicationContext(), new String[]{Manifest.permission.SEND_SMS},
-                        3);
-            }
-        }
-
-        /*
-         * (non-Javadoc)
-         *
-         * @see android.os.AsyncTask#onPostExecute(java.lang.Object)
-         */
-
-
-        /*
-         * (non-Javadoc)
-         *
-         * @see android.os.AsyncTask#onPreExecute()
-         */
         @Override
         protected void onPreExecute() {
-            // Things to be done before execution of long running operation. For
-            // example showing ProgessDialog
         }
-
-        /*
-         * (non-Javadoc)
-         *
-         * @see android.os.AsyncTask#onProgressUpdate(Progress[])
-         */
-
     }
 }
 
